@@ -29,31 +29,6 @@
 
 ---
 
-## 🏆 赞助商
-
-感谢以下赞助商对本项目的支持：
-
-| LOGO | 类型 | 赞助商名称 | 说明 | 网站 |
-| --- | --- | --- | --- | --- |
-| <img src="assets/omniboard.jpg" alt="OmniBoard" width="160"> | 企业 | OmniBoard | 字字动画旗下专业漫剧创作画布工具，从剧本到发行变现全链路一站式，新手可用 H3 模型五分钱一秒 | [omniboard.tv/register?ref=GITHUBADD7DZ](https://omniboard.tv/register?ref=GITHUBADD7DZ) |
-| <img src="assets/himadrama.png" alt="浮瑞万相AI" width="160"> | 企业 | 浮瑞万相AI | 浮瑞万相AI旗下喜马抓马 AI 视听全链路综合服务平台，HimaStudio 多模态 AI 视听创作平台及线上 OPC 社区 · 深度适配漫剧老李 Skill | [himadrama.com](https://www.himadrama.com) |
-| <img src="assets/dianzhong.png" alt="点众" width="160"> | 企业 | 点众 | 开放全 IP 库，超创与公司自制权限相同，可看到典藏版、爆款剧、精品剧的 IP | [点众开放 IP 库](https://vcnti1p0lovd.feishu.cn/wiki/VDIowZgiOiymKCkc1vnc7MjTnYe) |
-| *（LOGO 占位）* | — | 虚位以待 | 赞助位开放中——让你的产品出现在众多 AI 短剧创作者面前 | [联系我们](mailto:lixiaoxiao9888@gmail.com) |
-
-> 💡 **招商说明**：赞助位对模型渠道、算力平台、API 服务商及创作团队开放。
-> 合作请联系：邮箱 `lixiaoxiao9888@gmail.com` · 微信 `lisenlin998`
-
-### 🎬 分镜引擎专项赞助用户
-
-感谢以下用户赞助分镜引擎的开发（开放中）：
-
-*你的头像将出现在这里。*
-
-| 赞助用户 | 联系方式 |
-| --- | --- |
-| 汤圆（用老李 skills 出剧 · 包算力 · 包发行） | 微信：fush989 |
-
----
 
 ## 🧭 这是什么
 
@@ -179,7 +154,7 @@ python3 short-drama-director/scripts/build_board_lite.py <项目.md>
 ```
 lixiaoxiao9888-create/manju-laoli-skill/        # V7.4.20 多技能套装（154 文件）
 ├── README.md                                   # 本落地页（中文 + English）
-├── LICENSE / .gitignore / assets/
+├── LICENSE / .gitignore
 ├── short-drama-director/                       # L0 总控（62 文件 · 48 份规则库 · 机检脚本）
 │   ├── SKILL.md                                #   总控路由 + 工作法 + 模块索引
 │   ├── references/                             #   48 份专业规则库（含 style-bible 画风锁知识库 10 份）
@@ -356,7 +331,7 @@ python3 short-drama-director/scripts/build_board_lite.py <project.md>
 ```
 lixiaoxiao9888-create/manju-laoli-skill/        # V7.4.20 multi-skill suite (154 files)
 ├── README.md                                   # landing (Chinese + English)
-├── LICENSE / .gitignore / assets/
+├── LICENSE / .gitignore
 ├── short-drama-director/                       # L0 router (62 files · 48 rulebooks · lint scripts)
 ├── sd-decision-engine/                         # L1 decision (E01–E15)
 ├── sd-recon-engine/                            # L2 · sourcing
