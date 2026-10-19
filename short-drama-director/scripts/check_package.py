@@ -2236,7 +2236,7 @@ _vssm_txt = read(os.path.join(PKG, "sd-qc-engine", "scripts", "validate_seedance
 check("◓5 跨脚本时间轴与逐段化闭环（_c27_shot_span / gate_check / build_board_lite / 手册§八 / 2.5分段门）",
       "parse_time_ranges(line)" in _vp3
       and "GC_TIME_RE" in _gc_txt and "GC_SHOT_NO_RE" in _gc_txt
-      and "[\[【]?" in _bbl_txt
+      and r"[\[【]?" in _bbl_txt
       and "❌ **不识别**" not in _mcm2
       and "SEEDANCE_2_5" in _vssm_txt)
 
