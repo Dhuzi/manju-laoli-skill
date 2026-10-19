@@ -2114,13 +2114,13 @@ def validate(text, model="2.5", mode="new", track="1", combat="auto", c23="auto"
         if not _declared:
             continue
         _restate = []
-        for _ln_no, _ln in _s_seg:
+        for _shot_i, (_ln_no, _ln) in enumerate(_s_seg, 1):
             for _c, (_cp, _ca) in _declared.items():
                 for _cm in re.finditer(re.escape(_c), _ln):
                     _win = _ln[_cm.end():_cm.end() + 14]
                     _hit = next((p for p in _POS_ORDER if p in _win), "")
                     if _hit:
-                        _restate.append(f"镜{_ln_no}「{_c}」又写{_hit}（段首已锁{_cp}）")
+                        _restate.append(f"镜{_shot_i}「{_c}」又写{_hit}（段首已锁{_cp}）")
                         break
         if _restate:
             warns.append(
