@@ -337,6 +337,11 @@ def main():
         print(f'--- 段{ui}: {title}')
         print(f'    镜数={len(shots)}  段长={dur}s  字数={chars}  引用图号={figs}')
 
+        # 闸门1a 段长上限（2026-10-19 补充：2.5=30s / 2.0=15s / h3=15s）
+        #   旧版只把超长段当“节奏 WARN”处理，单用本闸门时会放过超过模型上限的段。
+        _seg_limit = {'2.5': 30, '2.0': 15, 'h3': 15}.get(a.model, 30)
+        if dur > _seg_limit:
+            fails.append(f'闸门1 段{ui}：段长 {dur}s 超过 model={a.model} 上限 {_seg_limit}s，必须拆段并写段缝衔接')
         # 闸门1 节奏档位：10s 以上只有 1-2 镜
         if dur >= 10 and len(shots) <= 2:
             warns.append(f'闸门1 段{ui}：{dur}s 只有 {len(shots)} 镜，需慢节奏白名单或补标点镜')
@@ -385,10 +390,15 @@ def main():
         for bad in ['接下一大分镜', '接下一段', '接分镜', '承接上一段', '接上段']:
             if bad in body:
                 fails.append(f'闸门4 段{ui}：含交接话术「{bad}」')
-        # 参数行应在代码框外
-        for bad in ['9:16', '16:9', '21:9', '分辨率', 'aspect_ratio']:
-            if re.search(r'(?<!【画幅风格】)…?' + re.escape(bad), body) and bad in ('aspect_ratio', '分辨率'):
-                warns.append(f'闸门4 段{ui}：参数「{bad}」疑似留在代码框内')
+        # 参数行应在代码框外（2026-10-19 修复：同一行已用【画幅风格】声明时豁免）
+        #   旧实现用定长 lookbehind，只能豁免“紧跟”写法；实际写法
+        #   「【画幅风格】16:9 横屏（aspect_ratio=16:9）」中间隔着十几字，永远命中 →
+        #   合规稿必带一条清不掉的 WARN，且与 validate_prompt 的 C6/C6b 要求直接冲突。
+        for bad in ('aspect_ratio', '分辨率'):
+            for _ln in body.splitlines():
+                if bad in _ln and '【画幅风格】' not in _ln:
+                    warns.append(f'闸门4 段{ui}：参数「{bad}」疑似留在代码框内（该行无【画幅风格】声明）')
+                    break
 
         # 闸门5 单组图片数（★2026-10-17 改为按 A 锁模型分档，原写死 9 会误杀 2.5）
         over, img_lim = img_gate_check(len(figs), a.model, a.img_limit)
