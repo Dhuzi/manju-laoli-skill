@@ -36,10 +36,15 @@ _MPL_HINT = ("[-] 缺少依赖：本脚本需要 matplotlib 才能出图。安�
              "    （不影响包内其余机检与投喂链路——情绪曲线为可选交付物，"
              "节拍数据仍可按 12 节拍手写进投喂稿）")
 
-# ── 中文字体检测与配置（macOS/常见 Linux 路径回退）──
+# ── 中文字体检测与配置（Windows / macOS / Linux 路径回退）──
 def _setup_cjk_font():
     """为 matplotlib 配置可用的中文字体，避免图形中文变方块。"""
     candidates = [
+        # Windows（2026-10-11 · 实测：候选表缺 Windows 路径时中文全为方块）
+        r"C://Windows//Fonts//msyh.ttc",        # 微软雅黑
+        r"C://Windows//Fonts//simhei.ttf",      # 黑体
+        r"C://Windows//Fonts//simsun.ttc",      # 宋体
+        r"C://Windows//Fonts//Deng.ttf",        # 等线
         "/System/Library/Fonts/Hiragino Sans GB.ttc",   # macOS
         "/System/Library/Fonts/STHeiti Light.ttc",       # macOS
         "/System/Library/Fonts/Supplemental/Songti.ttc", # macOS
@@ -57,6 +62,21 @@ def _setup_cjk_font():
                 return name
             except Exception:
                 continue
+    # 兜底：按常见中文字体名扫描 matplotlib 索引（Windows 字体文件名随系统版本不同，固定路径可能不中）
+    if _MPL_OK:
+        try:
+            from matplotlib import font_manager
+            _wanted = ("Microsoft YaHei", "SimHei", "SimSun", "Noto Sans CJK SC",
+                       "PingFang SC", "Source Han Sans SC", "WenQuanYi Micro Hei")
+            _avail = {f.name for f in font_manager.fontManager.ttflist}
+            for _name in _wanted:
+                if _name in _avail:
+                    matplotlib.rcParams["font.family"] = _name
+                    matplotlib.rcParams["axes.unicode_minus"] = False
+                    return _name
+        except Exception:
+            pass
+    print("[!] 未找到可用中文字体，图中中文可能显示为方块（建议安装 Noto Sans CJK 或微软雅黑）")
     return None
 
 _setup_cjk_font()
