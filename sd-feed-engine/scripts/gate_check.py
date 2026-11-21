@@ -355,6 +355,11 @@ def main():
         print(f'--- 段{ui}: {title}')
         print(f'    镜数={len(shots)}  段长={dur}s  字数={chars}  引用图号={figs}')
 
+        # 闸门1a 段长上限（本地补丁：2.5=30s / 2.0=15s，超限即 FAIL）
+        #   旧版只把超长段当“节奏 WARN”，单用本闸门时会放过超过模型上限的段。
+        _seg_limit = {'2.5': 30, '2.0': 15}.get(a.model, 30)
+        if dur > _seg_limit:
+            fails.append(f'闸门1 段{ui}：段长 {dur}s 超过 model={a.model} 上限 {_seg_limit}s，必须拆段并写段缝衔接')
         # 闸门1 节奏档位：10s 以上只有 1-2 镜
         if dur >= 10 and len(shots) <= 2:
             warns.append(f'闸门1 段{ui}：{dur}s 只有 {len(shots)} 镜，需慢节奏白名单或补标点镜')

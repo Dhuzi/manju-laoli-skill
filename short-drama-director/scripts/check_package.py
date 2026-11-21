@@ -2666,7 +2666,7 @@ check("◑25 全部门禁脚本 --self-test 实跑通过（防「查字面假绿
 def _count_pkg_files(root):
     n = 0
     for _dp, _dns, _fns in os.walk(root):
-        _dns[:] = [d for d in _dns if d != "__pycache__"]
+        _dns[:] = [d for d in _dns if d not in ("__pycache__", ".git")]   # 本地补丁：.git 元数据不算包体文件
         n += sum(1 for _f in _fns if not _f.endswith(".pyc"))
     return n
 

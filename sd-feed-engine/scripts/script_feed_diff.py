@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 script_feed_diff.py · 「剧本 ↔ 投喂稿」台词对照校验器
-用法：python script_feed_diff.py --script <剧本.md> --feed <投喂稿.md> [--names 陈建国,陈建军,陈建民]
+用法：python script_feed_diff.py --script <剧本.md> --feed <投喂稿.md> [--names 角色A,角色B]
 
 目的：拦截 P4 投喂层「内容级漏执行」——
       投喂稿可以压缩动作行、合并镜头，但**剧本台词不得凭空缺失**
@@ -25,7 +25,7 @@ def parse_script(path, names):
     with open(path, encoding='utf-8') as source:
         txt = source.read()
     out = []
-    name_pat = '|'.join(names)
+    name_pat = '|'.join(map(re.escape, names)) if names else r'[^\s：:（(]{1,12}'
     # 分镜稿格式：台词：角色（提示）："..."  或  台词：无（画外音延续）：角色："..."
     if re.search(r'^台词：', txt, re.M):
         for m in re.finditer(r'^台词：(.+)$', txt, re.M):
@@ -97,11 +97,15 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--script', required=True)
     ap.add_argument('--feed', required=True)
-    ap.add_argument('--names', default='陈建国,陈建军,陈建民,李秀兰,王秀兰')
+    ap.add_argument('--names', default=None,
+                    help='角色名，逗号分隔；不传则按「行首角色名：」自动识别')
     ap.add_argument('--thr', type=float, default=0.55)
     a = ap.parse_args()
 
-    script = parse_script(a.script, a.names.split(','))
+    names = [n.strip() for n in (a.names or '').split(',') if n.strip()]
+    if not names:
+        print('[i] 未传 --names，按「行首角色名：」自动识别说话人')
+    script = parse_script(a.script, names)
     feed = parse_feed(a.feed)
     with open(a.feed, encoding='utf-8') as source:
         feed_raw = source.read()
